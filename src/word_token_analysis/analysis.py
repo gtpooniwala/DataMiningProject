@@ -23,7 +23,6 @@ def perform_word_token_analysis():
                   ["adjective"] * len(adjectives))
     color_map = {"common": "blue", "noun": "red", "verb": "green", "adjective": "purple"}
     colors = [color_map[cat] for cat in categories]
-
     # Perform t-SNE
     embeddings_2d = perform_tsne(embeddings_array, n_components=2)
     embeddings_3d = perform_tsne(embeddings_array, n_components=3)
@@ -85,7 +84,7 @@ def perform_word_token_analysis():
     plot_dendrogram(hierarchical_model, all_words, 
                     filepath=os.path.join(results_dir, "dendrogram.png"))
 
-    print(f"\nAll plots have been saved as PNG files in the '{results_dir}' directory.")
+    print(f"\nAll word token analysis plots have been saved as PNG files in the '{results_dir}' directory.")
 
 if __name__ == "__main__":
     perform_word_token_analysis()

@@ -16,6 +16,7 @@
 #     return [item.embedding for item in response.data]
 
 from openai import OpenAI
+import numpy as np
 
 def get_word_lists():
     common_words = ["the", "be", "to", "of", "and", "a", "in", "that", "have", "I"]
@@ -28,47 +29,83 @@ def generate_embeddings(texts, is_sentence=False):
     client = OpenAI()
     if is_sentence:
         # Combine sentences into a single string
-        input_text = " ".join(texts)
+        input_text = texts  # Use texts directly as a list of sentences
+        embeddings = []
+        for text in input_text:
+            response = client.embeddings.create(
+                model="text-embedding-ada-002",
+                input=text
+            )
+            embeddings.append(response.data[0].embedding)
+        return np.array(embeddings)
     else:
         # Join words into a single string
         input_text = " ".join(texts)
 
-    response = client.embeddings.create(
-        model="text-embedding-ada-002",
-        input=input_text
-    )
-
-    if is_sentence:
-        # Return the single embedding for the combined sentences
-        return [response.data[0].embedding]
-    else:
-        # Return the embeddings for individual words
-        return [item.embedding for item in response.data]
+        embeddings = []
+        for text in texts:
+            response = client.embeddings.create(
+                model="text-embedding-ada-002",
+                input=text
+            )
+            embeddings.append(response.data[0].embedding)
+        return embeddings
+    
 
 def get_sentence_lists():
     sentences = [
-        "The cat chased the mouse across the room.",
-        "I love reading books on rainy days.",
-        "She enjoys painting beautiful landscapes.",
-        "The team won the championship game.",
-        "Eating healthy foods is important for good health.",
-        "The sun was shining brightly in the clear sky.",
-        "Learning a new language can be challenging but rewarding.",
-        "The concert was an amazing experience.",
-        "He always arrives early for his meetings.",
-        "Traveling to new places broadens your horizons.",
-        "The movie had an unexpected plot twist.",
-        "She excelled in her mathematics class.",
-        "The scientist made a groundbreaking discovery.",
-        "The beach was crowded on the hot summer day.",
-        "Exercise is crucial for maintaining a healthy lifestyle.",
-        "The company launched a new product line.",
-        "He is an avid collector of rare coins.",
-        "The book was a bestseller and received critical acclaim.",
-        "She enjoys hiking in the mountains.",
-        "The city was bustling with activity."
+        "What is the capital of France?",  # Question
+        "The capital of France is Paris.",  # Answer
+        "How does photosynthesis work?",  # Question
+        "Photosynthesis is the process by which green plants use sunlight to synthesize foods from carbon dioxide and water.",  # Answer
+        "What is the largest planet in our solar system?",  # Question
+        "The largest planet in our solar system is Jupiter.",  # Answer
+        "Who wrote 'To Kill a Mockingbird'?",  # Question
+        "'To Kill a Mockingbird' was written by Harper Lee.",  # Answer
+        "What is the boiling point of water?",  # Question
+        "The boiling point of water is 100 degrees Celsius.",  # Answer
+        "What is the speed of light?",  # Question
+        "The speed of light is approximately 299,792 kilometers per second.",  # Answer
+        "Who was the first president of the United States?",  # Question
+        "The first president of the United States was George Washington.",  # Answer
+        "What is the chemical symbol for gold?",  # Question
+        "The chemical symbol for gold is Au.",  # Answer
+        "How many continents are there on Earth?",  # Question
+        "There are seven continents on Earth.",  # Answer
+        "What is the tallest mountain in the world?",  # Question
+        "The tallest mountain in the world is Mount Everest.",  # Answer
+        "What is the main ingredient in guacamole?",  # Question
+        "The main ingredient in guacamole is avocado.",  # Answer
+        "What is the freezing point of water?",  # Question
+        "The freezing point of water is 0 degrees Celsius.",  # Answer
+        "Who developed the theory of relativity?",  # Question
+        "The theory of relativity was developed by Albert Einstein.",  # Answer
+        "What is the largest ocean on Earth?",  # Question
+        "The largest ocean on Earth is the Pacific Ocean.",  # Answer
+        "What is the currency of Japan?",  # Question
+        "The currency of Japan is the yen.",  # Answer
+        "What is the smallest prime number?",  # Question
+        "The smallest prime number is 2.",  # Answer
     ]
-    return sentences
+    labels = [
+        "Capital of France (Q)", "Capital of France (A)",
+        "Photosynthesis (Q)", "Photosynthesis (A)",
+        "Largest planet (Q)", "Largest planet (A)",
+        "Author of 'To Kill a Mockingbird' (Q)", "Author of 'To Kill a Mockingbird' (A)",
+        "Boiling point of water (Q)", "Boiling point of water (A)",
+        "Speed of light (Q)", "Speed of light (A)",
+        "First president of the USA (Q)", "First president of the USA (A)",
+        "Chemical symbol for gold (Q)", "Chemical symbol for gold (A)",
+        "Number of continents (Q)", "Number of continents (A)",
+        "Tallest mountain (Q)", "Tallest mountain (A)",
+        "Main ingredient in guacamole (Q)", "Main ingredient in guacamole (A)",
+        "Freezing point of water (Q)", "Freezing point of water (A)",
+        "Theory of relativity (Q)", "Theory of relativity (A)",
+        "Largest ocean (Q)", "Largest ocean (A)",
+        "Currency of Japan (Q)", "Currency of Japan (A)",
+        "Smallest prime number (Q)", "Smallest prime number (A)"
+    ]
+    return sentences, labels
 
 def generate_sentence_embeddings(sentences):
     return generate_embeddings(sentences, is_sentence=True)
