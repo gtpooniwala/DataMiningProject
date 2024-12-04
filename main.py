@@ -10,7 +10,7 @@ from src.sentence_token_analysis.analysis import perform_sentence_analysis
 def main():
     # nltk.download('all')
 
-    perform_word_token_analysis()
+    # perform_word_token_analysis()
     perform_sentence_analysis()
     # Add other analysis functions as you develop them
 
