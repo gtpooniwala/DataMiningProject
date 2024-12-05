@@ -1,6 +1,3 @@
-Based on the project structure you've shared and the current README, I'll help you update the README to better reflect your project's current state and structure. Here's an updated version:
-
-```markdown
 # Analyzing and Improving RAG System Performance Using Statistical Methods
 
 ## Table of Contents
