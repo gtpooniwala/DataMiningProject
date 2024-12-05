@@ -8,12 +8,11 @@ from src.sentence_token_analysis.analysis import perform_sentence_analysis
 # import nltk
 
 def main():
-    # nltk.download('all')
+    # nltk.download('all') # for analysing data in the nltk library
 
-    # perform_word_token_analysis()
+    perform_word_token_analysis()
     perform_sentence_analysis()
-    # Add other analysis functions as you develop them
-
+    
 
 if __name__ == "__main__":
     main()

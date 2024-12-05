@@ -1,0 +1,337 @@
+\documentclass{beamer}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{color}
+
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+
+\title{Exploring the Embedding Space for Enhanced RAG System Performance}
+\subtitle{A Statistical Approach to Understanding and Improving Retrieval-Augmented Generation}
+\author{Gaurav Pooniwala}
+\date{December 3, 2023}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}
+\frametitle{Introduction}
+\begin{itemize}
+    \item \textbf{Objective:} To explore and understand the embedding space of a RAG system to enhance its performance using statistical methods.
+    \item \textbf{Research Question:} How can visualizing and analyzing the embedding space help us understand the RAG algorithm and use this understanding to improve its performance?
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Context}
+\begin{itemize}
+    \item \textbf{Retrieval-Augmented Generation (RAG):} A method that combines the retrieval of relevant documents with the generation of responses using a language model.
+    \item \textbf{Mechanism of RAG:} RAG identifies the nearest neighbor to a question or query from a database of documents stored as embeddings.
+    \begin{itemize}
+        \item \textbf{Embeddings:} Dense vector representations of words or sentences. In this analysis, we use embeddings of size 1536.
+        \item \textbf{Role of Cosine Distance:} The similarity between the query and the documents is calculated using cosine distance, helping to identify the most relevant document.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Motivation}
+\begin{itemize}
+    \item \textbf{Importance of Analysis:} Understanding the embedding space and the effectiveness of cosine distance in finding relevant documents is crucial for improving RAG performance.
+    \item \textbf{Understanding the Embedding Space:} Visualizing embeddings helps us gain insights into how words and sentences are represented in the latent space.
+    \item \textbf{Improving RAG Performance:} Analyzing the embedding space can help identify ways to enhance the performance of RAG systems.
+    \item \textbf{Analysis Goals:} Our goal is to understand the structure of the embedding space and evaluate the effectiveness of different clustering methods.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Data Description}
+\begin{itemize}
+    \item \textbf{Data Source:} Synthetically generated data based on typical datasets. Internal datasets were also used but results are not shared due to GDPR and proprietary constraints.
+    \item \textbf{Data Types:} 
+    \begin{itemize}
+        \item \textbf{Word Embeddings:} Common words, nouns, verbs, and adjectives.
+        \item \textbf{Sentence Embeddings:} Question-answer pairs.
+    \end{itemize}
+    \item \textbf{Data Size:} Analysis was run repeatedly in groups of up to ~40 words and 16-20 question-answer pairs, totaling about 100 questions.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Methods Overview}
+\begin{itemize}
+    \item \textbf{Word Embeddings:}
+    \begin{itemize}
+        \item Generate embeddings for common words, nouns, verbs, and adjectives.
+        \item Visualize the embeddings using t-SNE and PCA to understand the structure of the embedding space.
+        \item Test clustering methods to identify patterns in the embeddings.
+    \end{itemize}
+    \item \textbf{Sentence Embeddings:}
+    \begin{itemize}
+        \item Use a set of question-answer pairs to generate sentence embeddings.
+        \item Visualize the embeddings and analyze cosine distances to evaluate the accuracy of identifying relevant answers.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Word Embedding Analysis}
+\textbf{We generate the embeddings for the following set of words using the text-embedding-ada-002 model:}
+\begin{itemize}
+    \item \textbf{Common Words:} the, be, to, of, and, a, in, that, have, I
+    \item \textbf{Nouns:} cat, dog, house, car, tree, book, phone, computer, city, ocean
+    \item \textbf{Verbs:} run, jump, eat, sleep, write, read, swim, dance, sing, think
+    \item \textbf{Adjectives:} happy, sad, big, small, fast, slow, hot, cold, new, old
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Word Embedding Analysis - t-SNE}
+\begin{itemize}
+    \item \textbf{Process:}
+    \begin{itemize}
+        \item Perform t-SNE to reduce dimensions to 2D and 3D.
+        \item Visualize the embeddings.
+    \end{itemize}
+    \item \textbf{Results:} Word embeddings of similar types are generally clustered together in the t-SNE visualization.
+\end{itemize}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../word_token_analysis/tsne_2d.png}
+    \caption{t-SNE visualization of word embeddings (2D)}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Word Embedding Analysis - PCA}
+\begin{itemize}
+    \item \textbf{Process:}
+    \begin{itemize}
+        \item Perform PCA on the embeddings.
+        \item Visualize the first four principal components.
+    \end{itemize}
+    \item \textbf{Results:} Word embeddings of similar types are generally clustered together in the PCA visualization. Although, the first two components explain only 13\% of the variance.
+\end{itemize}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../word_token_analysis/pca_components_1_2.png}
+    \caption{PCA visualization of word embeddings (1st and 2nd components)}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Word Embedding Analysis - Clustering (K-means)}
+\begin{itemize}
+    \item \textbf{Process:}
+    \begin{itemize}
+        \item Perform K-means clustering.
+        \item Visualize the clusters.
+    \end{itemize}
+    \item \textbf{Results:} K-means clustering results.
+    \item K-means assumes clusters are spherical and equally sized, which may not be suitable when using cosine distances instead of euclidean distances.
+\end{itemize}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../word_token_analysis/kmeans_clusters.png}
+    \caption{K-means Clustering}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Word Embedding Analysis - Clustering (Hierarchical)}
+\begin{itemize}
+    \item \textbf{Process:}
+    \begin{itemize}
+        \item Perform hierarchical clustering.
+        \item Visualize the clusters.
+    \end{itemize}
+    \item \textbf{Results:} Hierarchical clustering seems to perform marginally better than K-means.
+\end{itemize}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../word_token_analysis/hierarchical_clusters.png}
+    \caption{Hierarchical Clustering}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Sentence Embedding Analysis}
+\begin{itemize}
+    \item \textbf{Objective:} To evaluate the effectiveness of sentence embeddings in identifying relevant answers using cosine similarity and clustering methods.
+    \item \textbf{Process:}
+    \begin{itemize}
+        \item Generate embeddings for a set of question-answer pairs.
+        \item Calculate pairwise cosine similarities to evaluate the relevance of answers.
+        \item Apply t-SNE for dimensionality reduction and visualize the embeddings.
+        \item Perform K-means and hierarchical clustering to group similar sentences.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Example Similarity Analysis}
+\begin{itemize}
+    \item \textbf{Relevant Similarity:}
+    \begin{itemize}
+        \item Sentence 1: What is the capital of France?
+        \item Sentence 2: The capital of France is Paris.
+        \item Similarity: 0.74
+    \end{itemize}
+    \item \textbf{Random Similarity:}
+    \begin{itemize}
+        \item Sentence 1: What is the capital of France?
+        \item Sentence 2: Photosynthesis is the process by which green plants use sunlight to synthesize foods from carbon dioxide and water.
+        \item Similarity: -0.12
+    \end{itemize}
+    \item \textbf{Accuracy:} The accuracy of finding the closest answer based on cosine similarity is 100\% for our small dataset of 16 questions.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Sentence Embedding Analysis - t-SNE}
+\begin{itemize}
+    \item \textbf{Process:}
+    \begin{itemize}
+        \item Perform t-SNE to reduce dimensions to 2D.
+        \item Visualize the embeddings.
+    \end{itemize}
+    \item \textbf{Results:} Show plot of t-SNE visualization.
+\end{itemize}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../sentence_token_analysis/tsne_sentence_embeddings.png}
+    \caption{t-SNE visualization of sentence embeddings}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Sentence Embedding Analysis - Clustering (K-means)}
+\begin{itemize}
+    \item \textbf{Process:}
+    \begin{itemize}
+        \item Perform K-means clustering on sentence embeddings.
+        \item Visualize the clusters.
+    \end{itemize}
+    \item \textbf{Results:} 
+    \begin{itemize}
+        \item K-means clustering accuracy: 94\%
+    \end{itemize}
+\end{itemize}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../sentence_token_analysis/kmeans_sentence_clusters.png}
+    \caption{K-means Clustering of Sentence Embeddings}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Sentence Embedding Analysis - Clustering (Hierarchical)}
+\begin{itemize}
+    \item \textbf{Process:}
+    \begin{itemize}
+        \item Perform hierarchical clustering on sentence embeddings.
+        \item Visualize the clusters.
+    \end{itemize}
+    \item \textbf{Results:} 
+    \begin{itemize}
+        \item Hierarchical clustering accuracy: 88\%
+    \end{itemize}
+\end{itemize}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../sentence_token_analysis/hierarchical_sentence_clusters.png}
+    \caption{Hierarchical Clustering of Sentence Embeddings}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Evaluation of Cosine Similarity and Clustering Methods}
+\begin{itemize}
+    \item \textbf{Process:}
+    \begin{itemize}
+        \item Calculate cosine similarity for each question-answer pair.
+        \item Identify the closest answer based on cosine similarity.
+        \item Compare with K-means and hierarchical clustering on sentence embeddings.
+    \end{itemize}
+    \item \textbf{Results:} 
+    \begin{itemize}
+        \item Cosine similarity accuracy: 100\%
+        \item K-means clustering accuracy: 94\%
+        \item Hierarchical clustering accuracy: 88\%
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Observations}
+\begin{itemize}
+    \item \textbf{Embedding Space:} 
+    \begin{itemize}
+        \item The embedding space is non-linear. Cosine similarity is used to calculate distances between embeddings.
+        \item The embedding space prioritizes grouping words and sentences of similar types together, such as verbs, nouns, or topics like geography and physics.
+        \item Opposite sentiments, emotions, or even opposite words tend to be very close to each other in the embedding space.
+    \end{itemize}
+    \item \textbf{Methods:}
+    \begin{itemize}
+        \item PCA, being a linear technique and the first 2 dimensions only accounting for 13\% of the variance, is not ideal but still shows promising results.
+        \item t-SNE works well to visualize the data as a whole on the macro level, but individual distances are too warped to be interpreted directly.
+        \item The assumptions for both K-means and hierarchical clustering do not work very well for cosine distances. While K-means failed at the word level, hierarchical clustering partially failed at the sentence level.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Limitations}
+\begin{itemize}
+    \item \textbf{Synthetic Data:} Easy to identify the best question-answer pair. Real-world data may not have direct answers or may have multiple candidates.
+    \item \textbf{Ground Truth:} May be unknown, requiring human validation.
+    \item \textbf{Qualitative Testing:} Current testing for larger datasets is qualitative. Quantitative analysis is needed for real-world applications.
+    \item \textbf{Scalability:} High accuracy achieved with simple question-answer pairs may not extend well to larger datasets:
+    \begin{itemize}
+        \item More candidate answers reduce the probability of finding the correct answer.
+        \item Multiple correct or relevant answers may exist.
+        \item Qualitative analysis is not feasible for large datasets.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Potential Next Steps}
+\begin{itemize}
+    \item \textbf{Extensions:} 
+    \begin{itemize}
+        \item Use an LLM to automatically analyze the relevance of selected answers.
+        \item Test various strategies such as different embeddings and chunk sizes.
+    \end{itemize}
+    \item \textbf{Improvements:} 
+    \begin{itemize}
+        \item Develop methods for quantitative analysis to enhance the current qualitative approach.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Conclusion}
+\begin{itemize}
+    \item \textbf{Summary:} 
+    \begin{itemize}
+        \item We explored the embedding space of a RAG system using statistical methods.
+        \item Visualizing and analyzing the embedding space helped us understand the RAG algorithm and identify ways to improve its performance.
+    \end{itemize}
+    \item \textbf{Final Thoughts:} 
+    \begin{itemize}
+        \item The embedding space is non-linear, making classical techniques less effective.
+        \item Future work should focus on quantitative analysis and real-world data applications.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Questions}
+\begin{center}
+    \textbf{Q\&A:} Thank you for your attention. I am happy to answer any questions you may have.
+\end{center}
+\end{frame}
+
+\end{document}
