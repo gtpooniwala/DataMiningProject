@@ -117,32 +117,10 @@ The word token analysis generates several visualizations saved in the `results/w
 
 ## Results
 
-The results of the word token analysis can be found in the `results/word_token_analysis/` directory. These include various plots and visualizations that provide insights into the structure and relationships of the word embeddings.
+The results of the analysis can be found in the `results/` directory. These include various plots and visualizations that provide insights into the structure and relationships of the word embeddings.
 
-## Contributing
+## Report and Presentation
+The detailed report and presentation for this project can be found in the results/report/ and results/presentation/ directories, respectively:
 
-[Instructions for contributors]
-
-## License
-
-[Your chosen license]
-
-```
-
-This updated README now:
-
-1. Reflects the actual project structure more accurately.
-2. Provides more detail about the Word Token Analysis component and its outputs.
-3. Mentions the location of the results and the types of visualizations generated.
-4. Keeps placeholders for future components that are yet to be developed.
-
-You can further customize this README by:
-
-- Adding specific instructions for running individual components.
-- Describing the purpose and functionality of the utility modules in the `src/utils/` directory.
-- Providing more details about the exploratory analysis notebook.
-- Adding information about the testing framework and how to run tests.
-- Expanding on the results section as you generate more insights from your analysis.
-
-Remember to keep updating the README as your project evolves and new components are added or existing ones are modified.
-```
+- Report: report/report.pdf
+- Presentation: results/presentation/presentation.pdf
